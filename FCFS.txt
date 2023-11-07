@@ -1,0 +1,53 @@
+#include <iostream.h>
+#include <conio.h>
+
+typedef struct Process {
+	char name[3];
+	int bt,wt,at,tat,rt,p;
+}Process;
+
+
+int main() {
+	clrscr();
+
+	int numberOfProcess;
+
+	cout << "Enter number of processes: "; cin >> numberOfProcess;
+	Process arr[3];
+	int i,j,k;
+
+	for(i = 0; i < numberOfProcess; i++) {
+		cout << "Enter BURST time for process P" << i+1 <<": ";
+		cin >> arr[i].bt;
+
+		cout << "Enter ARRIVAL time for process P" << i+1 <<":";
+		cin >> arr[i].at;
+	}
+
+	arr[0].wt = 0;
+
+	for(j = 0; j < numberOfProcess; j++) {
+		if(j != 0) {
+			arr[j].wt = arr[j - 1].wt + arr[j - 1].bt;
+		}
+
+		arr[j].tat = arr[j].bt + arr[j].wt;
+		arr[j].rt = arr[j].wt;
+	}
+
+	float avgTAT = 0, avgWT = 0;
+	for(k = 0; k < numberOfProcess; k++) {
+		avgTAT += arr[k].tat;
+		avgWT += arr[k].wt;
+	}
+
+	avgTAT /= numberOfProcess;
+	avgWT /= numberOfProcess;
+
+	cout << "AVGTAT for processes: " << avgTAT << endl;
+	cout << "AVGWT for processes: " << avgWT << endl;
+
+	getch();
+
+	return 0;
+}

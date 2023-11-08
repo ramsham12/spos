@@ -1,0 +1,73 @@
+#include <iostream.h>
+#include<conio.h>
+
+void initializeArr(int arr[], int size) {
+    for (int i = 0; i < size; i++)
+    {
+	arr[i] = -1;
+    }
+}
+
+void printAllocations(int arr[], int arr2[], int size) {
+    cout << "PROCESSOR NUMBER\tPROCESSOR SIZE\t ALLOCATED BLOCK" << endl;
+    for (int i = 0; i < size; i++)
+    {
+	cout << "\t" << i+1 << "\t\t   " << arr2[i] << "\t\t   ";
+	if(arr[i] != -1) {
+	    cout << arr[i] << endl;
+	} else {
+	    cout << "Not Allocated" << endl;
+	}
+    }
+}
+
+int max(int memBlock[], int currentIndex, int newIndex) {
+    if(memBlock[newIndex] > memBlock[currentIndex]) {
+	return newIndex;
+    }
+    return currentIndex;
+}
+
+
+void wrostFit(int memBlocks[], int memSize, int procArr[], int procSize) {
+    int allocatedBlocks[4];
+    initializeArr(allocatedBlocks, procSize);
+
+    //for every processor
+    for (int i = 0; i < procSize; i++)
+    {
+	int wrstIDX = -1;
+	for (int j = 0; j < memSize; j++)
+	{
+	    if(memBlocks[j] >= procArr[i]) {
+		if(wrstIDX < 0) {
+		    wrstIDX = j;
+		} else {
+		    wrstIDX = max(memBlocks, wrstIDX, j);
+		}
+	    }
+	}
+
+	if(wrstIDX != -1) {
+	    //allocate
+	    allocatedBlocks[i] = wrstIDX+1;
+	    memBlocks[wrstIDX] -= procArr[i];
+	}
+    }
+    printAllocations(allocatedBlocks,procArr,procSize);
+}
+
+int main() {
+
+    int memBlocks[] = {100,210,90,150};
+    int procArr[] = {90,100,110,125};
+
+    int memSize = sizeof(memBlocks) / sizeof(memBlocks[0]);
+    int procSize = sizeof(procArr) / sizeof(procArr[0]);
+
+
+    wrostFit(memBlocks, memSize, procArr, procSize);
+    getch();
+
+    return 0;
+}
